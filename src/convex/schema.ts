@@ -59,6 +59,13 @@ const schema = defineSchema(
       .index("email", ["email"]) // index for the email. do not remove or modify
       .index("phone", ["phone"]),
 
+    manualAuthCodes: defineTable({
+      email: v.string(),
+      token: v.string(),
+      createdAt: v.number(),
+      expiresAt: v.number(),
+    }).index("by_email", ["email"]).index("by_expires", ["expiresAt"]),
+
     // Google Calendar OAuth tokens (one connected account per photographer).
     googleTokens: defineTable({
       userId: v.id("users"),

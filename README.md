@@ -5,6 +5,7 @@ exportações CSV em português (Excel). React/Vite + Convex + Convex Auth.
 
 ## O que o MVP oferece
 - Cadastro aberto e login com e-mail e senha de no mínimo 8 caracteres.
+- Confirmação de cadastro com código temporário entregue pelo operador em canal privado.
 - Acesso individual: um fotógrafo por conta. O backend filtra clientes e sessões
   por usuário autenticado. Os registros persistem no Convex.
 - Clientes e sessões: criação, edição e exclusão. CSV exportável.

@@ -14,9 +14,10 @@ function Auth({ redirectAfterAuth = "/dashboard" }: { redirectAfterAuth?: string
   const [searchParams] = useSearchParams();
   const returnTo = searchParams.get("returnTo");
   const redirect = returnTo && SAFE_RETURN_TO.test(returnTo) ? returnTo : redirectAfterAuth;
-  const [mode, setMode] = useState<"signIn" | "signUp">("signIn");
+  const [mode, setMode] = useState<"signIn" | "signUp" | "verify">("signIn");
   const [working, setWorking] = useState(false);
   const [error, setError] = useState("");
+  const [verificationEmail, setVerificationEmail] = useState("");
   const [accepted, setAccepted] = useState(false);
 
   useEffect(() => {
@@ -40,11 +41,12 @@ function Auth({ redirectAfterAuth = "/dashboard" }: { redirectAfterAuth?: string
     }
     setWorking(true);
     try {
-      await signIn("password", {
+      const result = await signIn("password", {
         email, password, flow: mode,
         ...(mode === "signUp" ? { acceptedTerms: "true" } : {}),
       });
-      navigate(redirect, { replace: true });
+      if (result.signingIn) navigate(redirect, { replace: true });
+      else { setVerificationEmail(email); setMode("verify"); }
     } catch {
       // Do not reveal whether an email is registered.
       setError(mode === "signIn"
@@ -55,6 +57,19 @@ function Auth({ redirectAfterAuth = "/dashboard" }: { redirectAfterAuth?: string
     }
   }
 
+  async function verify(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (working) return;
+    setWorking(true); setError("");
+    const code = String(new FormData(event.currentTarget).get("code") ?? "");
+    try {
+      const result = await signIn("password", { email: verificationEmail, code, flow: "email-verification" });
+      if (!result.signingIn) throw new Error("Código inválido.");
+      navigate(redirect, { replace: true });
+    } catch { setError("Código inválido ou expirado. Confira com o responsável pelo atendimento."); }
+    finally { setWorking(false); }
+  }
+
   return (
     <main className="modern-grain flex min-h-screen items-center justify-center bg-background px-4 py-10">
       <div className="w-full max-w-sm">
@@ -63,11 +78,20 @@ function Auth({ redirectAfterAuth = "/dashboard" }: { redirectAfterAuth?: string
         </Link>
         <Card className="border-border/70">
           <CardHeader>
-            <CardTitle>{mode === "signIn" ? "Entrar na conta" : "Criar conta"}</CardTitle>
+            <CardTitle>{mode === "verify" ? "Confirme seu cadastro" : mode === "signIn" ? "Entrar na conta" : "Criar conta"}</CardTitle>
             <CardDescription>Gestão de clientes e sessões de fotografia</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={submit} className="space-y-4">
+            {mode === "verify" ? <form onSubmit={verify} className="space-y-4">
+              <p className="text-sm">Solicite ao responsável pelo FotoFlow o código de confirmação para {verificationEmail}, pelo canal de atendimento combinado. O código vale por 15 minutos.</p>
+              <label className="block space-y-1 text-sm">
+                <span>Código de confirmação</span>
+                <Input name="code" type="text" inputMode="numeric" pattern="[0-9]{8}" minLength={8} maxLength={8} autoComplete="one-time-code" required disabled={working} />
+              </label>
+              {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+              <Button type="submit" className="w-full" disabled={working}>Confirmar código</Button>
+              <button type="button" className="w-full text-sm text-primary" disabled={working} onClick={() => { setMode("signIn"); setError(""); }}>Voltar ao login</button>
+            </form> : <form onSubmit={submit} className="space-y-4">
               <label className="block space-y-1 text-sm">
                 <span>E-mail</span>
                 <Input name="email" type="email" autoComplete="email" maxLength={254} required disabled={working} />
@@ -100,7 +124,7 @@ function Auth({ redirectAfterAuth = "/dashboard" }: { redirectAfterAuth?: string
                 disabled={working} onClick={() => { setMode(mode === "signIn" ? "signUp" : "signIn"); setError(""); }}>
                 {mode === "signIn" ? "Primeiro acesso? Criar conta" : "Já tenho conta"}
               </button>
-            </form>
+            </form>}
           </CardContent>
         </Card>
         <p className="mt-4 text-center text-xs text-muted-foreground">

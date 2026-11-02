@@ -12,8 +12,14 @@
   funções automaticamente. Nunca usar segredos em variáveis `VITE_*`.
 
 O cadastro é aberto, com e-mail e senha de 8 a 128 caracteres.
+A confirmação utiliza código de 8 dígitos, válido por 15 minutos, entregue
+pelo operador em canal privado após confirmar a identidade por contato independente.
+No Dashboard Convex, Functions → `manualVerification:pending` (interna),
+informe o e-mail do solicitante. Nunca publique códigos ou execute essa consulta
+em um cliente público. O Convex Auth valida expiração e uso único; novos códigos
+substituem os anteriores. Não há envio automático de e-mail nem serviço externo.
 Senhas são processadas pelo Convex Auth.
-Não há recuperação automática de senha nem verificação de e-mail na versão
+Não há recuperação automática de senha nem envio automático de e-mails na versão
 MVP; não prometer essas funções ao primeiro cliente.
 
 ## Privacidade, autorização e segurança
