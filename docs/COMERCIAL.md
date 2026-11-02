@@ -32,7 +32,7 @@ com um fotógrafo real antes de investir em recursos extras.
 1. Formalizar preço, vencimento, suporte, política de cancelamento e
    identificação do fornecedor em contrato/termos revisados.
 2. Disponibilizar o endereço HTTPS real do Cloudflare Pages.
-3. Enviar o código de convite por canal privado, criar conta com senha
+3. Criar conta com e-mail e senha
    única forte e marcar aceite dos documentos.
 4. Validar login, cadastro, sessão, valores, exportação, logout/relogin,
    uso no celular e acesso isolado de outro cliente.

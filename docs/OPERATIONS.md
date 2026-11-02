@@ -7,12 +7,12 @@
 - Backend/banco: um deployment Convex independente do Barber OS.
 - Pages: `VITE_CONVEX_URL` (público), `VITE_ENABLE_GOOGLE_CALENDAR=false`.
 - Convex (privado): `JWT_PRIVATE_KEY`, `JWKS`, `SITE_URL`,
-  `CONVEX_SITE_URL`, `FOTOFLOW_INVITE_CODE`.
+  `CONVEX_SITE_URL`.
 - Opcional: segredo GitHub Actions `CONVEX_DEPLOY_KEY` para publicar as
   funções automaticamente. Nunca usar segredos em variáveis `VITE_*`.
 
-Sem chave de convite no servidor, o cadastro fica bloqueado; o convite
-só pode ser verificado no backend. Senhas são processadas pelo Convex Auth.
+O cadastro é aberto, com e-mail e senha de 8 a 128 caracteres.
+Senhas são processadas pelo Convex Auth.
 Não há recuperação automática de senha nem verificação de e-mail na versão
 MVP; não prometer essas funções ao primeiro cliente.
 
@@ -62,7 +62,7 @@ precisar de limpeza manual; o painel emite aviso.
 
 ## Primeiro cliente — teste necessário
 
-- Cadastro com convite e checkbox dos termos; sem convite falha.
+- Cadastro com e-mail, senha e checkbox dos termos; sem aceite falha.
 - Login correto/errado, logout, reload e retorno à tela protegida.
 - Criar, editar e excluir um cliente e uma sessão; valores e resumo coerentes.
 - Exportar clientes/sessões em CSV e abrir no Excel pt-BR.

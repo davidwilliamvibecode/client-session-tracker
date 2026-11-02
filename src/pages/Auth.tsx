@@ -34,22 +34,22 @@ function Auth({ redirectAfterAuth = "/dashboard" }: { redirectAfterAuth?: string
       setError("Leia e aceite os Termos e a Política de Privacidade.");
       return;
     }
-    if (mode === "signUp" && password.length < 12) {
-      setError("A senha precisa ter pelo menos 12 caracteres.");
+    if (mode === "signUp" && password.length < 8) {
+      setError("A senha precisa ter pelo menos 8 caracteres.");
       return;
     }
     setWorking(true);
     try {
       await signIn("password", {
         email, password, flow: mode,
-        ...(mode === "signUp" ? { inviteCode: String(form.get("inviteCode") ?? ""), acceptedTerms: "true" } : {}),
+        ...(mode === "signUp" ? { acceptedTerms: "true" } : {}),
       });
       navigate(redirect, { replace: true });
     } catch {
       // Do not reveal whether an email is registered.
       setError(mode === "signIn"
         ? "Não foi possível entrar. Confira seus dados."
-        : "Cadastro não concluído. Verifique e-mail, senha e código de convite.");
+        : "Cadastro não concluído. Verifique e-mail e senha.");
     } finally {
       setWorking(false);
     }
@@ -76,16 +76,12 @@ function Auth({ redirectAfterAuth = "/dashboard" }: { redirectAfterAuth?: string
                 <span>Senha</span>
                 <Input name="password" type="password"
                   autoComplete={mode === "signUp" ? "new-password" : "current-password"}
-                  minLength={mode === "signUp" ? 12 : undefined} maxLength={128}
+                  minLength={mode === "signUp" ? 8 : undefined} maxLength={128}
                   required disabled={working} />
               </label>
               {mode === "signUp" && (
                 <>
-                  <p className="text-xs text-muted-foreground">Use uma senha única com 12 caracteres ou mais.</p>
-                  <label className="block space-y-1 text-sm">
-                    <span>Código de convite para ativar a conta</span>
-                    <Input name="inviteCode" type="text" autoComplete="off" required disabled={working} />
-                  </label>
+                  <p className="text-xs text-muted-foreground">Use uma senha única com 8 caracteres ou mais.</p>
                   <label className="flex items-start gap-2 text-xs leading-5">
                     <input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)}
                       className="mt-1" disabled={working} />

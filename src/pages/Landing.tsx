@@ -138,7 +138,7 @@ export default function Landing() {
                 </Button>
               </div>
               <p className="mt-4 text-xs text-muted-foreground">
-                Cadastro por convite • Acesso com e-mail e senha
+                Crie sua conta • Acesso com e-mail e senha
               </p>
             </motion.div>
 
