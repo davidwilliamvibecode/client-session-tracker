@@ -138,7 +138,7 @@ export default function Landing() {
                 </Button>
               </div>
               <p className="mt-4 text-xs text-muted-foreground">
-                Sem cartão de crédito • Entre com e-mail ou como convidado
+                Cadastro por convite • Acesso com e-mail e senha
               </p>
             </motion.div>
 
